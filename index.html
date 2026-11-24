@@ -584,3 +584,240 @@ function next() {
 }
 
 function markKnown() {
+    let word = current.words[index][0];
+
+    if (!mastered.includes(word)) {
+        mastered.push(word);
+        points += 2;
+        save();
+    }
+
+    next();
+}
+
+function renderQuiz() {
+    if (quizIndex >= quizPool.length) {
+        document.getElementById("content").innerHTML = `
+            <h2 class="success">Quiz completed!</h2>
+            <p>You have completed this vocabulary round.</p>
+            <p class="muted">Your current score: ${points} points</p>
+            <button class="action" onclick="restartQuiz()">Try again</button>
+            <button class="action secondary" onclick="setMode('cards',document.querySelector('.tab'))">Flashcards</button>
+        `;
+        return;
+    }
+
+    quizAnswered = false;
+
+    const w = quizPool[quizIndex];
+
+    let choices = current.words
+        .filter(x => x[0] !== w[0])
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+
+    choices.push(w);
+    choices.sort(() => Math.random() - 0.5);
+
+    const correct = choices.indexOf(w);
+
+    document.getElementById("content").innerHTML = `
+        <span class="badge">TRANSLATION QUIZ</span>
+        <p class="muted">Question ${quizIndex + 1} of ${quizPool.length}</p>
+
+        <div class="progress">
+            <div class="bar" style="width:${quizIndex / quizPool.length * 100}%"></div>
+        </div>
+
+        <div class="card">
+            <h2>What does this word mean?</h2>
+            <div class="word">${w[0]}</div>
+
+            <div id="answers">
+                ${choices.map((c, i) => `
+                    <button class="answer" onclick="checkAnswer(${i},${correct})">
+                        ${c[1]}
+                    </button>
+                `).join("")}
+            </div>
+
+            <div id="feedback"></div>
+        </div>
+
+        <button class="action secondary" onclick="nextQuestion()">
+            Next question →
+        </button>
+    `;
+}
+
+function checkAnswer(selected, correct) {
+    if (quizAnswered) return;
+
+    quizAnswered = true;
+
+    document.querySelectorAll("#answers button").forEach((button, i) => {
+        button.disabled = true;
+
+        if (i === correct) {
+            button.classList.add("correct");
+        }
+
+        if (i === selected && i !== correct) {
+            button.classList.add("wrong");
+        }
+    });
+
+    const feedback = document.getElementById("feedback");
+
+    if (selected === correct) {
+        points += 3;
+        save();
+
+        feedback.innerHTML = `
+            <p class="success feedback">Correct! +3 points.</p>
+        `;
+    } else {
+        feedback.innerHTML = `
+            <p class="error feedback">Not quite! The correct answer is highlighted.</p>
+        `;
+    }
+}
+
+function nextQuestion() {
+    if (!quizAnswered) {
+        document.getElementById("feedback").innerHTML = `
+            <p class="error">Please select an answer first.</p>
+        `;
+        return;
+    }
+
+    quizIndex++;
+    renderQuiz();
+}
+
+function restartQuiz() {
+    quizIndex = 0;
+    quizPool = [...current.words].sort(() => Math.random() - 0.5);
+    renderQuiz();
+}
+
+function renderRecall() {
+    const w = current.words[index];
+
+    document.getElementById("content").innerHTML = `
+        <span class="badge">ACTIVE RECALL</span>
+
+        <p class="muted">
+            Try to remember the German translation without looking it up.
+        </p>
+
+        <div class="progress">
+            <div class="bar" style="width:${(index + 1) / current.words.length * 100}%"></div>
+        </div>
+
+        <div class="card">
+            <p class="muted">Translate this expression:</p>
+            <div class="word">${w[0]}</div>
+
+            <input
+                class="search"
+                id="recallInput"
+                placeholder="Type your German translation..."
+                autocomplete="off"
+                onkeydown="if(event.key==='Enter') reveal()"
+            >
+
+            <button class="action" onclick="reveal()">Reveal answer</button>
+
+            <div id="recallAnswer"></div>
+        </div>
+
+        <button class="action secondary" onclick="previous()">← Previous</button>
+        <button class="action secondary" onclick="next()">Next →</button>
+    `;
+}
+
+function reveal() {
+    const w = current.words[index];
+    const input = document.getElementById("recallInput").value.trim();
+
+    document.getElementById("recallAnswer").innerHTML = `
+        <hr style="border-color:#ffffff20;margin:20px 0">
+
+        <p class="muted">Correct translation:</p>
+        <div class="translation">${w[1]}</div>
+
+        <p class="muted">${w[2]}</p>
+
+        <div class="example">${w[3]}</div>
+
+        <p class="muted">
+            Your answer: ${input ? escapeHTML(input) : "No answer entered"}
+        </p>
+
+        <button class="action" onclick="markKnown()">
+            I knew it ✓
+        </button>
+    `;
+}
+
+function renderList() {
+    document.getElementById("content").innerHTML = `
+        <span class="badge">COMPLETE VOCABULARY LIST</span>
+
+        <h3>All words in this topic</h3>
+
+        <input
+            class="search"
+            id="filter"
+            placeholder="Search for a word, translation or meaning..."
+            oninput="filterWords()"
+        >
+
+        <div id="wordList"></div>
+    `;
+
+    filterWords();
+}
+
+function filterWords() {
+    const query = document.getElementById("filter").value.toLowerCase();
+
+    const words = current.words.filter(w =>
+        w.join(" ").toLowerCase().includes(query)
+    );
+
+    document.getElementById("wordList").innerHTML = words.length
+        ? words.map(w => `
+            <div class="word-row">
+                <div>
+                    <strong>${w[0]}</strong><br>
+                    <span class="muted">${w[1]}</span>
+                    <div class="muted" style="font-size:12px;margin-top:5px">
+                        ${w[3]}
+                    </div>
+                </div>
+
+                <span>${mastered.includes(w[0]) ? "✓" : ""}</span>
+            </div>
+        `).join("")
+        : `<p class="muted">No matching vocabulary found.</p>`;
+}
+
+function escapeHTML(value) {
+    return value.replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[character]);
+}
+
+// Initialisation
+updateStats();
+renderTopics();
+
+</script>
+</body>
+</html>
