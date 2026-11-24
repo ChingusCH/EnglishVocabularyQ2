@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOCABULARY LAB | Q2 English</title>
+
+<style>
+:root {
+    --bg: #101827;
+    --panel: #1c2a3d;
+    --panel2: #263950;
+    --gold: #f2c879;
+    --teal: #70d6c3;
+    --text: #f5f2eb;
+    --muted: #aab7c7;
+    --green: #8bd6a9;
+    --red: #ed8b8b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+header {
+    padding: 35px 7%;
+    background: linear-gradient(120deg, #17283c, #263d50);
+    border-bottom: 1px solid #ffffff20;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.eyebrow {
+    color: var(--teal);
+    letter-spacing: 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: clamp(35px, 7vw, 65px);
+    margin: 8px 0;
+}
+
+h1 span { color: var(--gold); }
+
+header p {
+    color: var(--muted);
+    max-width: 600px;
+}
+
+.stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.stat {
+    background: #ffffff10;
+    border: 1px solid #ffffff20;
+    padding: 12px 18px;
+    border-radius: 12px;
+    min-width: 125px;
+}
+
+.stat strong {
+    display: block;
+    color: var(--gold);
+    font-size: 23px;
+}
+
+.stat small { color: var(--muted); }
+
+main {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+h2 { margin-bottom: 5px; }
+
+.muted { color: var(--muted); }
+
+.topics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 13px;
+    margin: 20px 0 30px;
+}
+
+.topic {
+    background: var(--panel);
+    border: 1px solid #ffffff18;
+    border-radius: 15px;
+    padding: 18px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.topic:hover, .topic.active {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.topic.active { background: var(--panel2); }
+
+.topic-icon { font-size: 26px; }
+
+.topic h3 { margin: 8px 0 4px; }
+
+.topic p {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+}
+
+.lab {
+    background: var(--panel);
+    border: 1px solid #ffffff18;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.lab-head {
+    padding: 22px;
+    background: var(--panel2);
+}
+
+.lab-head h2 { margin: 0; }
+
+.tabs {
+    display: flex;
+    gap: 5px;
+    padding: 12px;
+    overflow-x: auto;
+    border-bottom: 1px solid #ffffff15;
+}
+
+.tab {
+    padding: 10px 15px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.tab.active {
+    color: var(--gold);
+    background: #f2c87918;
+}
+
+.content { padding: 25px; min-height: 390px; }
+
+.card {
+    background: #101827;
+    border: 1px solid #ffffff18;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 18px 0;
+}
+
+.word {
+    color: var(--gold);
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.translation {
+    font-size: 19px;
+    color: var(--teal);
+}
+
+.example {
+    border-left: 3px solid var(--teal);
+    padding-left: 14px;
+    margin-top: 20px;
+    color: var(--muted);
+    font-style: italic;
+}
+
+button {
+    font-family: inherit;
+}
+
+.action {
+    border: 0;
+    background: var(--gold);
+    color: #17202c;
+    padding: 11px 18px;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px 5px 5px 0;
+}
+
+.secondary {
+    background: #344960;
+    color: white;
+}
+
+.answer {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 14px;
+    margin: 9px 0;
+    background: var(--panel2);
+    color: var(--text);
+    border: 1px solid #ffffff20;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.answer:hover { border-color: var(--teal); }
+
+.answer.correct {
+    border-color: var(--green);
+    background: #8bd6a920;
+}
+
+.answer.wrong {
+    border-color: var(--red);
+    background: #ed8b8b20;
+}
+
+.feedback { margin: 15px 0; font-weight: bold; }
+.success { color: var(--green); }
+.error { color: var(--red); }
+
+.progress {
+    height: 8px;
+    background: #ffffff18;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+}
+
+.search {
+    width: 100%;
+    background: #101827;
+    color: white;
+    border: 1px solid #ffffff25;
+    border-radius: 10px;
+    padding: 13px;
+    margin: 10px 0;
+    font-size: 15px;
+}
+
+.word-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px;
+    border-bottom: 1px solid #ffffff15;
+}
+
+.word-row strong { color: var(--gold); }
+
+.badge {
+    color: var(--teal);
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 35px;
+    font-size: 12px;
+}
+
+@media(max-width:600px) {
+    .content { padding: 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="container">
+    <div class="eyebrow">Q2 ENGLISH · NRW · B2–C1</div>
+    <h1>VOCABULARY <span>LAB.</span></h1>
+    <p>
+        Build a powerful vocabulary. Master sophisticated expressions,
+        understand nuanced meanings and use English naturally.
+    </p>
+
+    <div class="stats">
+        <div class="stat">
+            <strong id="points">0</strong>
+            <small>Points</small>
+        </div>
+        <div class="stat">
+            <strong id="learned">0</strong>
+            <small>Words mastered</small>
+        </div>
+        <div class="stat">
+            <strong id="level">Beginner</strong>
+            <small>Your level</small>
+        </div>
+    </div>
+</div>
+</header>
+
+<main>
+
+<h2>Choose your vocabulary field</h2>
+<p class="muted">Explore the topics and expand your active vocabulary.</p>
+
+<div class="topics" id="topics"></div>
+
+<div class="lab">
+    <div class="lab-head">
+        <h2 id="title">Vocabulary training</h2>
+        <p class="muted" id="description">Select a topic to start.</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="setMode('cards',this)">Flashcards</button>
+        <button class="tab" onclick="setMode('quiz',this)">Quiz</button>
+        <button class="tab" onclick="setMode('writing',this)">Active Recall</button>
+        <button class="tab" onclick="setMode('list',this)">Word List</button>
+    </div>
+
+    <div class="content" id="content">
+        <h3>Welcome to Vocabulary Lab.</h3>
+        <p class="muted">Choose a topic above to begin.</p>
+    </div>
+</div>
+
+</main>
+
+<footer>VOCABULARY LAB · LEARN WORDS. THINK BIGGER.</footer>
+
+<script>
+
+const data = [
+{
+id:"dystopia",
+icon:"🌆",
+name:"Utopia & Dystopia",
+desc:"Power, freedom, surveillance and society.",
+words:[
+["surveillance","Überwachung","Mass surveillance threatens individual privacy.","The novel explores the consequences of constant surveillance."],
+["conformity","Anpassung","The pressure to behave according to social expectations.","The regime demands absolute conformity."],
+["oppression","Unterdrückung","Cruel or unfair treatment by those in power.","The citizens live under political oppression."],
+["autonomy","Selbstbestimmung","The ability to make independent decisions.","Technology should not undermine human autonomy."],
+["indoctrinate","indoktrinieren","To teach beliefs without encouraging critical thinking.","Children are indoctrinated from an early age."],
+["dehumanisation","Entmenschlichung","The process of treating people as less than human.","The system results in the dehumanisation of society."],
+["subjugation","Unterwerfung","The act of bringing someone under control.","The novel depicts the subjugation of the population."],
+["totalitarian","totalitär","A system in which the state has complete control.","The story takes place in a totalitarian society."],
+["dissent","Widerspruch; abweichende Meinung","The expression of opinions opposing an official position.","Any form of dissent is strictly prohibited."],
+["compliance","Befolgung; Einhaltung","The act of following rules or demands.","The government expects unquestioning compliance."],
+["to manipulate","manipulieren","To influence someone unfairly or cleverly.","The media are used to manipulate public opinion."],
+["subversive","umstürzlerisch; systemkritisch","Seeking to challenge or undermine established authority.","The authorities regard the book as subversive."]
+]
+},
+{
+id:"american",
+icon:"🗽",
+name:"The American Dream",
+desc:"Identity, opportunity, inequality and success.",
+words:[
+["social mobility","soziale Mobilität","The ability to move between social classes.","Education can promote social mobility."],
+["aspiration","Bestreben; Wunsch","A strong desire to achieve something.","Her aspirations go beyond financial success."],
+["disparity","Ungleichheit; Unterschied","A significant difference between groups.","The income disparity continues to grow."],
+["meritocracy","Leistungsgesellschaft","A system in which success depends on ability and achievement.","The idea of meritocracy is often questioned."],
+["self-reliance","Eigenständigkeit","The ability to depend on oneself.","Self-reliance is a central American value."],
+["disillusionment","Ernüchterung; Enttäuschung","Disappointment after discovering the truth.","The novel reflects widespread disillusionment."],
+["upward mobility","sozialer Aufstieg","Movement towards a higher social position.","Many people see education as a path to upward mobility."],
+["to strive","sich bemühen; streben","To make great efforts to achieve something.","People strive for a better future."],
+["inequality","Ungleichheit","An unfair difference in opportunities or resources.","Economic inequality remains a major challenge."],
+["to attain","erreichen; erlangen","To succeed in achieving something.","Not everyone can attain the same standard of living."],
+["deprivation","Entbehrung; Mangel","The damaging lack of basic necessities.","Childhood deprivation can affect future opportunities."],
+["to perpetuate","aufrechterhalten; fortsetzen","To cause something to continue.","The system may perpetuate existing inequalities."]
+]
+},
+{
+id:"global",
+icon:"🌍",
+name:"Globalisation",
+desc:"Culture, economy, migration and interconnectedness.",
+words:[
+["interconnectedness","Vernetzung","The state of being connected with one another.","Globalisation has increased worldwide interconnectedness."],
+["exploitation","Ausbeutung","The unfair use of people or resources.","The company was accused of worker exploitation."],
+["sustainability","Nachhaltigkeit","The ability to continue without exhausting resources.","Sustainability should be a global priority."],
+["cultural homogenisation","kulturelle Vereinheitlichung","The process of cultures becoming more alike.","Global brands can contribute to cultural homogenisation."],
+["interdependence","gegenseitige Abhängigkeit","A situation in which groups depend on each other.","Modern economies are characterised by interdependence."],
+["to exacerbate","verschärfen","To make a problem worse.","Global competition may exacerbate inequality."],
+["multiculturalism","Multikulturalismus","The coexistence of different cultural groups.","Multiculturalism can enrich a society."],
+["to undermine","untergraben","To gradually weaken or damage something.","Unfair trade practices undermine local businesses."],
+["displacement","Vertreibung; Verdrängung","The forced movement of people from their homes.","Conflict causes the displacement of millions."],
+["to foster","fördern","To encourage the development of something.","Cultural exchange can foster mutual understanding."],
+["trade barrier","Handelshemmnis","A restriction on international trade.","Trade barriers can affect developing economies."],
+["global supply chain","globale Lieferkette","The international network involved in producing goods.","Global supply chains connect manufacturers worldwide."]
+]
+},
+{
+id:"technology",
+icon:"🤖",
+name:"Science & Technology",
+desc:"AI, innovation, ethics and the future.",
+words:[
+["ethical implications","ethische Auswirkungen","The moral consequences of an action.","AI raises serious ethical implications."],
+["autonomous","autonom; selbstständig","Able to operate independently.","Autonomous vehicles may transform transportation."],
+["breakthrough","Durchbruch","An important discovery or development.","The breakthrough changed medical research."],
+["to facilitate","erleichtern; ermöglichen","To make a process easier.","Technology can facilitate communication."],
+["unprecedented","beispiellos","Never having happened or existed before.","AI is developing at an unprecedented pace."],
+["accountability","Rechenschaftspflicht","The responsibility to explain one's actions.","There must be accountability for AI decisions."],
+["to revolutionise","revolutionieren","To change something dramatically.","Technology may revolutionise healthcare."],
+["algorithmic bias","algorithmische Verzerrung","Unfair patterns in automated decisions.","Algorithmic bias can reinforce discrimination."],
+["to mitigate","abschwächen; eindämmen","To make something less harmful.","Governments must mitigate potential risks."],
+["feasibility","Machbarkeit","The possibility of being achieved.","Scientists are examining the feasibility of the project."],
+["emerging technology","aufkommende Technologie","A technology that is still developing.","Emerging technologies create new opportunities."],
+["to pose a threat","eine Bedrohung darstellen","To create a potential danger.","Cyberattacks pose a serious threat to security."]
+]
+},
+{
+id:"environment",
+icon:"🌱",
+name:"Environment",
+desc:"Climate change, sustainability and responsibility.",
+words:[
+["biodiversity","Artenvielfalt","The variety of living organisms in an area.","Climate change threatens biodiversity."],
+["depletion","Erschöpfung; Schwund","The reduction of a resource.","The depletion of natural resources is alarming."],
+["to deteriorate","sich verschlechtern","To become worse over time.","Air quality continues to deteriorate."],
+["carbon footprint","CO₂-Fußabdruck","The amount of greenhouse gases caused by an activity.","Consumers can reduce their carbon footprint."],
+["renewable energy","erneuerbare Energie","Energy from naturally replenished sources.","Renewable energy is essential for the transition."],
+["to offset","ausgleichen","To compensate for something.","Companies attempt to offset their emissions."],
+["ecosystem","Ökosystem","A community of organisms and their environment.","Pollution can damage entire ecosystems."],
+["scarcity","Knappheit","A situation in which something is insufficient.","Water scarcity affects millions of people."],
+["to preserve","bewahren; erhalten","To protect something from damage or loss.","We must preserve natural habitats."],
+["environmental degradation","Umweltzerstörung","The deterioration of the natural environment.","Environmental degradation threatens future generations."],
+["to curb","eindämmen; begrenzen","To control or limit something.","Governments must curb carbon emissions."],
+["conservation","Naturschutz; Erhaltung","The protection of nature and resources.","Conservation efforts are becoming increasingly important."]
+]
+},
+{
+id:"media",
+icon:"📱",
+name:"Media & Society",
+desc:"Social media, identity, influence and communication.",
+words:[
+["misinformation","Fehlinformation","False or inaccurate information.","Misinformation spreads rapidly online."],
+["to distort","verzerren","To present something in a misleading way.","Social media can distort our perception of reality."],
+["credibility","Glaubwürdigkeit","The quality of being trusted or believed.","The source's credibility must be examined."],
+["echo chamber","Echokammer","An environment reinforcing existing beliefs.","Online echo chambers can deepen divisions."],
+["to scrutinise","genau prüfen","To examine something very carefully.","Users should scrutinise online information."],
+["polarisation","Polarisierung","The division of society into opposing groups.","Social media can contribute to political polarisation."],
+["to disseminate","verbreiten","To distribute information widely.","News can be disseminated within seconds."],
+["biased","voreingenommen; verzerrt","Showing unfair preference for one perspective.","The article presents a biased account."],
+["privacy","Privatsphäre","The right to keep personal information private.","Digital privacy is increasingly important."],
+["to exploit","ausnutzen","To use someone or something unfairly.","Some platforms exploit users' personal data."],
+["digital footprint","digitaler Fußabdruck","The trail of information left online.","Every online interaction can contribute to your digital footprint."],
+["to undermine trust","Vertrauen untergraben","To weaken confidence in someone or something.","Fake news can undermine trust in institutions."]
+]
+}
+];
+
+let current = null;
+let mode = "cards";
+let index = 0;
+let quizIndex = 0;
+let points = Number(localStorage.getItem("vl_points") || 0);
+let mastered = JSON.parse(localStorage.getItem("vl_mastered") || "[]");
+let quizPool = [];
+let quizAnswered = false;
+
+function save() {
+    localStorage.setItem("vl_points", points);
+    localStorage.setItem("vl_mastered", JSON.stringify(mastered));
+    updateStats();
+}
+
+function updateStats() {
+    document.getElementById("points").textContent = points;
+    document.getElementById("learned").textContent = mastered.length;
+
+    let level = points < 50 ? "Beginner" :
+                points < 150 ? "Explorer" :
+                points < 300 ? "Advanced" : "Master";
+
+    document.getElementById("level").textContent = level;
+}
+
+function renderTopics() {
+    document.getElementById("topics").innerHTML = data.map(t => `
+        <div class="topic ${current && current.id === t.id ? "active" : ""}"
+             onclick="selectTopic('${t.id}')">
+            <div class="topic-icon">${t.icon}</div>
+            <h3>${t.name}</h3>
+            <p>${t.desc}</p>
+        </div>
+    `).join("");
+}
+
+function selectTopic(id) {
+    current = data.find(t => t.id === id);
+    index = 0;
+    quizIndex = 0;
+    quizPool = [...current.words].sort(() => Math.random() - .5);
+    document.getElementById("title").textContent = current.icon + " " + current.name;
+    document.getElementById("description").textContent = current.desc;
+    renderTopics();
+    render();
+}
+
+function setMode(newMode, button) {
+    mode = newMode;
+    index = 0;
+    quizIndex = 0;
+
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    button.classList.add("active");
+
+    if (mode === "quiz" && current) {
+        quizPool = [...current.words].sort(() => Math.random() - .5);
+    }
+
+    render();
+}
+
+function render() {
+    if (!current) return;
+
+    if (mode === "cards") renderCard();
+    if (mode === "quiz") renderQuiz();
+    if (mode === "writing") renderRecall();
+    if (mode === "list") renderList();
+}
+
+function renderCard() {
+    let w = current.words[index];
+    let isKnown = mastered.includes(w[0]);
+
+    document.getElementById("content").innerHTML = `
+        <span class="badge">FLASHCARD TRAINING · ${index+1}/${current.words.length}</span>
+        <div class="progress">
+            <div class="bar" style="width:${(index+1)/current.words.length*100}%"></div>
+        </div>
+
+        <div class="card">
+            <div class="word">${w[0]}</div>
+            <div class="translation">${w[1]}</div>
+            <p class="muted">${w[2]}</p>
+            <div class="example">${w[3]}</div>
+        </div>
+
+        <p class="muted">${isKnown ? "✓ Marked as mastered" : "Review this word and decide whether you know it."}</p>
+
+        <button class="action secondary" onclick="previous()">← Previous</button>
+        <button class="action" onclick="markKnown()">✓ I know this</button>
+        <button class="action secondary" onclick="next()">Next →</button>
+    `;
+}
+
+function previous() {
+    index = (index - 1 + current.words.length) % current.words.length;
+    renderCard();
+}
+
+function next() {
+    index = (index + 1) % current.words.length;
+    renderCard();
+}
+
+function markKnown() {
